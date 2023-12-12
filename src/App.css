@@ -15,3 +15,10 @@
 .smallcaps {
   font-variant: small-caps;
 }
+
+#input-area input:disabled {
+  background-color: #eee;
+  border-color: #999;
+  color: #aaa;
+  box-shadow: none;
+}
