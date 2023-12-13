@@ -1,3 +1,9 @@
+import Markdown from 'react-markdown'
+
+function trimPrefix(text) {
+    return text.replace(/^(Answer|Response|ANSWER|RESPONSE|answer|response|A): */, '');
+}
+
 export default function QueryBubble({ type, query, reply }) {
     return (
         <div className="flex flex-col border border-[#666] w-full rounded-[4px]">
@@ -6,7 +12,9 @@ export default function QueryBubble({ type, query, reply }) {
                 <div className="p-3">{query}</div>
             </div>
             {reply.length > 0 &&
-                <div className="p-3 border-t border-[#666]">{reply}</div>
+                <div className="reply p-3 border-t border-[#666]">
+                    <Markdown>{trimPrefix(reply)}</Markdown>
+                </div>
             }
         </div>
     )

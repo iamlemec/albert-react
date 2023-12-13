@@ -22,3 +22,17 @@
   color: #aaa;
   box-shadow: none;
 }
+
+/* markdown fixes */
+
+.reply ul, .reply ol {
+  margin-left: 1.5em;
+}
+
+.reply ul {
+  list-style-type: disc;
+}
+
+.reply ol {
+  list-style-type: decimal;
+}

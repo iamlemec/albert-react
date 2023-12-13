@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+
 import QueryBubble from './components/QueryBubble'
 import './App.css'
 
@@ -9,12 +10,13 @@ export default function App() {
     const [messages, setMessages] = useState([msg0])
     const [query, setQuery] = useState('')
     const messagesEndRef = useRef(null)
+    const chatBoxRef = useRef(null)
     const inputRef = useRef(null)
 
     function appendReply(msgs, value) {
-        const [type, query, reply] = msgs[msgs.length-1];
+        const [type, query, reply] = msgs[msgs.length-1]
         const lastMessage = [type, query, reply + value]
-        return [...msgs.slice(0, -1), lastMessage];
+        return [...msgs.slice(0, -1), lastMessage]
     }
     
     async function sendMessage() {
@@ -33,10 +35,10 @@ export default function App() {
         setMessages(msgs => [...msgs, msg])
 
         // construct streaming response
-        const codec = new TextDecoderStream();
-        const reader = response.body.pipeThrough(codec);
+        const codec = new TextDecoderStream()
+        const reader = response.body.pipeThrough(codec)
         for await (const value of reader) {
-            setMessages(msgs => appendReply(msgs, value));
+            setMessages(msgs => appendReply(msgs, value))
         }
 
         // clear query
@@ -56,17 +58,21 @@ export default function App() {
 
     useEffect(() => {
         scrollToBottom()
-    }, [messages]);
+    }, [messages])
 
     useEffect(() => {
         if (!streaming) {
             inputRef.current?.focus()
         }
-    }, [streaming]);
+    }, [streaming])
 
     return (
         <div className="flex flex-col justify-end items-center w-full h-full">
-            <div id="chat-box" className="text-lg pt-[150px] pb-[250px] flex flex-col items-center w-[1200px] overflow-scroll no-scrollbar">
+            <div
+                id="chat-box"
+                ref={chatBoxRef}
+                className="text-lg pt-[150px] pb-[250px] flex flex-col items-center w-[1200px] overflow-scroll no-scrollbar"
+            >
                 <div id="message-list" className="flex flex-col gap-8 w-full">
                     {messages.map(([type, query, reply], index) => (
                         <QueryBubble key={index} type={type} query={query} reply={reply} />
