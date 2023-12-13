@@ -93,7 +93,7 @@ def serve(model, host='127.0.0.1', port=8000, buffer_size=1, **kwargs):
 
     @app.get('/chunks')
     def chunks():
-        return model.data.chunks
+        return list(model.data.chunks.items())
 
     @app.post('/simil')
     def simil(request: Simil):
