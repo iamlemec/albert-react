@@ -2,10 +2,9 @@
 
 import os
 import json
-
-from pydantic import BaseModel
-
 from itertools import chain, accumulate
+from time import sleep
+from pydantic import BaseModel
 
 # get this directory
 module_dir = os.path.dirname(os.path.realpath(__file__))
@@ -66,6 +65,11 @@ def serve(model, host='127.0.0.1', port=8000, buffer_size=1, **kwargs):
     from fastapi.responses import FileResponse, StreamingResponse
     from fastapi.middleware.cors import CORSMiddleware
 
+    def dummy_stream(toks, delay=0.1):
+        for tok in toks:
+            sleep(delay)
+            yield tok
+
     # create api
     app = FastAPI()
 
@@ -103,7 +107,7 @@ def serve(model, host='127.0.0.1', port=8000, buffer_size=1, **kwargs):
         sims = uniform_scale(sims)
         sizes = [len(v) for v in model.data.chunks.values()]
         dsims = split_list(sims.tolist(), sizes)
-        return dict(zip(model.data.chunks, dsims))
+        return dsims
 
     @app.post('/query')
     def run_query(request: Query):
